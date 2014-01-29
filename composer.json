@@ -1,7 +1,7 @@
 {
     "name": "webcms2/search-module",
     "type": "library",
-    "description": "#Descriptions#",
+    "description": "Search module for webcms2.",
     "keywords": ["webcms2","module"],
     "homepage": "http://www.webcook.cz/WebCMS2",
     "license": "MIT",
