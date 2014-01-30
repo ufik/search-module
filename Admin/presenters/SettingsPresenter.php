@@ -23,7 +23,16 @@ class SettingsPresenter extends BasePresenter {
     public function createComponentSettingsForm(){
 
 	$settings = array();
-
+	
+	$entities = array();
+	
+	$meta = $this->em->getMetadataFactory()->getAllMetadata();
+	foreach ($meta as $m) {
+	    $entities[] = $m->getName();
+	}
+	
+	dump($entities);
+	
 	return $this->createSettingsForm($settings);
     }
 	
