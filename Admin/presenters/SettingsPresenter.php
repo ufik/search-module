@@ -32,7 +32,11 @@ class SettingsPresenter extends BasePresenter {
                 $object = $this->createObject($package['package']);
 
                 if ($object->isSearchable()) {
-                    $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package']);
+                    $setting = $this->em->getRepository('WebCMS\SearchModule\Doctrine\SearchSetting')->findOneByPackage($package['package']);
+                    
+                    $active = is_object($setting) ? $setting->getSearch() : false;
+                    
+                    $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package'])->setValue($active);
                 } else {
                     $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package'] . ' not searchable.')->setDisabled(true);
                 }
@@ -49,12 +53,16 @@ class SettingsPresenter extends BasePresenter {
         $values = $form->getValues();
         
         foreach($values as $key => $v){
+            
+            $key = str_replace('_', '-', $key);
+            
             $setting = $this->em->getRepository('WebCMS\SearchModule\Doctrine\SearchSetting')->findOneBy(array(
                 'package' => $key
             ));
             
             if(!is_object($setting)){
                 $setting = new \WebCMS\SearchModule\Doctrine\SearchSetting;                
+                $setting->setPackage($key);
             }
             
             $setting->setSearch($v);
