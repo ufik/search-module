@@ -7,38 +7,73 @@ namespace AdminModule\SearchModule;
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
 class SettingsPresenter extends BasePresenter {
-	
+
     protected function startup() {
-	parent::startup();
+        parent::startup();
     }
 
     protected function beforeRender() {
-	parent::beforeRender();	
+        parent::beforeRender();
     }
-	
-    public function actionDefault($idPage){
 
+    public function actionDefault($idPage) {
+        
     }
-	
-    public function createComponentSettingsForm(){
 
-	$settings = array();
-	
-	$entities = array();
-	
-	$meta = $this->em->getMetadataFactory()->getAllMetadata();
-	foreach ($meta as $m) {
-	    $entities[] = $m->getName();
-	}
-	
-	dump($entities);
-	
-	return $this->createSettingsForm($settings);
-    }
-	
-    public function renderDefault($idPage){
-	$this->reloadContent();
+    public function createComponentSearchSettingForm() {
 
-	$this->template->idPage = $idPage;
+        $form = $this->createForm();
+
+        $packages = \WebCMS\SystemHelper::getPackages();
+
+        foreach ($packages as $key => $package) {
+
+            if ($package['vendor'] === 'webcms2' && $package['package'] !== 'webcms2' && $package['package'] !== 'search-module') {
+                $object = $this->createObject($package['package']);
+
+                if ($object->isSearchable()) {
+                    $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package']);
+                } else {
+                    $form->addCheckbox(str_replace('-', '_', $package['package']), $package['package'] . ' not searchable.')->setDisabled(true);
+                }
+            }
+        }
+        
+        $form->addSubmit('send', 'Save')->setAttribute('class', array('btn btn-success'));
+        $form->onSuccess[] = callback($this, 'searchSettingFormSubmitted');
+        
+        return $form;
     }
+
+    public function searchSettingFormSubmitted(\Nette\Forms\Form $form){
+        $values = $form->getValues();
+        
+        foreach($values as $key => $v){
+            $setting = $this->em->getRepository('WebCMS\SearchModule\Doctrine\SearchSetting')->findOneBy(array(
+                'package' => $key
+            ));
+            
+            if(!is_object($setting)){
+                $setting = new \WebCMS\SearchModule\Doctrine\SearchSetting;                
+            }
+            
+            $setting->setSearch($v);
+            
+            if(!$setting->getId()){
+                $this->em->persist($setting);
+            }
+        }
+        
+        $this->em->flush();
+        
+        $this->flashMessage('Search settings has been saved.', 'success');
+        $this->redirect('this');
+    }
+    
+    public function renderDefault($idPage) {
+        $this->reloadContent();
+
+        $this->template->idPage = $idPage;
+    }
+
 }
