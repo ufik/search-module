@@ -2,6 +2,9 @@
 
 namespace FrontendModule\SearchModule;
 
+use Nette\Application\UI;
+use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
+
 /**
  * Description of
  *
@@ -32,8 +35,25 @@ class SearchPresenter extends \FrontendModule\BasePresenter{
 	$this->template->id = $id;
     }
     
-    public function createComponentSearchForm(){
-        $form = $this->createForm('searchForm-submit');
+    public function createComponentSearchForm($name, $context = null, $fromPage = null){
+        
+	if($context != null){
+	    
+	    $form = new UI\Form();
+
+	    $form->getElementPrototype()->action = $context->link('default', array(
+		    'path' => $fromPage->getPath(),
+		    'abbr' => $context->abbr,
+		    'do' => 'searchForm-submit'
+	    ));
+
+	    $form->setTranslator($context->translator);
+	    $form->setRenderer(new BootstrapRenderer);
+
+	}else{
+	    $form = $this->createForm('searchForm-submit');
+	}
+	
         $form->setMethod('get');
         
         $form->addText('q', 'Search phrase')->setDefaultValue($this->getParameter('q'))->setAttribute('class', array('form-control'));
@@ -49,17 +69,32 @@ class SearchPresenter extends \FrontendModule\BasePresenter{
         
         $packages = $this->em->getRepository('WebCMS\SearchModule\Doctrine\SearchSetting')->findBySearch(true);
         
-        // fetch pages where to search
-        $results = array();
-        foreach($packages as $p){
-            $module = $this->createObject($p->getPackage());
-            
-            if($module->isSearchable()){
-                $tmp = $module->search($this->em, $values->q, $this->language);
-                $results = array_merge($results, $tmp);
-            }
-        }
+	$results = array();
+	if(strlen($values->q) > 0){
+	
+	    // fetch pages where to search
+	    foreach($packages as $p){
+		$module = $this->createObject($p->getPackage());
+
+		if($module->isSearchable()){
+		    $tmp = $module->search($this->em, $values->q, $this->language);
+		    $results = array_merge($results, $tmp);
+		}
+	    }
+	
+	}else{
+	    $this->flashMessage('Nothing to search. Please type search phrase.', 'danger');
+	}
         
         $this->results = $results;        
+    }
+    
+    public function searchBox($context, $fromPage){
+		
+	$template = $context->createTemplate();
+	$template->searchForm = $this->createComponentSearchForm('searchForm', $context, $fromPage);
+	$template->setFile('../app/templates/search-module/Search/boxes/search.latte');
+
+	return $template;
     }
 }

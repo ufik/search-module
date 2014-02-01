@@ -26,6 +26,7 @@ class Search extends \WebCMS\Module {
     );
 
     public function __construct(){
+	$this->addBox('searchBox', 'Search', 'searchBox');
     }
 
     public function cloneData($em, $oldLang, $newLang, $transform){
