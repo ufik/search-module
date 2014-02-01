@@ -1,3 +1,17 @@
 {block #content}
-
+    
+    {control searchForm}
+    
+    {if !empty($results)}
+        {foreach $results as $result}
+            <div>
+                <span>{$result->getRate()}</span>
+                <a href="{$result->getUrl()}">{$result->getTitle()}</a>
+                <div>
+                    {$result->getPerex()}
+                </div>
+            </div>
+        {/foreach}
+    {/if}
+    
 {/block}
