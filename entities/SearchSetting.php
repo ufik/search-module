@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Table(name="SearchSettings")
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class SearchSetting extends \AdminModule\Doctrine\Entity {
+class SearchSetting extends \WebCMS\Entity\Entity {
     /**
      * @orm\Column
      */
