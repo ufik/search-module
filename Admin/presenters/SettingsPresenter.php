@@ -24,7 +24,7 @@ class SettingsPresenter extends BasePresenter {
 
         $form = $this->createForm();
 
-        $packages = \WebCMS\SystemHelper::getPackages();
+        $packages = \WebCMS\Helpers\SystemHelper::getPackages();
 
         foreach ($packages as $key => $package) {
 
