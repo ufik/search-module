@@ -28,12 +28,4 @@ class Search extends \WebCMS\Module {
     public function __construct(){
 	$this->addBox('searchBox', 'Search', 'searchBox');
     }
-
-    public function cloneData($em, $oldLang, $newLang, $transform){
-	return false;
-    }
-
-    public function translateData($em, $language, $from, $to, \Webcook\Translator\ITranslator $translator){
-	return false;
-    }
 }
