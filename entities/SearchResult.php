@@ -46,4 +46,13 @@ class SearchResult {
     public function setPerex($perex) {
         $this->perex = $perex;
     }
+
+    public function toArray() {
+        return array(
+            'title' => $this->title,
+            'perex' => $this->perex,
+            'url' => $this->url,
+            'rate' => $this->rate
+        );
+    }
 }
