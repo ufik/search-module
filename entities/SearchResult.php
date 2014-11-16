@@ -5,54 +5,63 @@ namespace WebCMS\SearchModule;
 /**
  * @author Tomas Voslar <tomas.voslar at webcook.cz>
  */
-class SearchResult {
-    
+class SearchResult
+{
     private $title;
-    
+
     private $perex;
-    
+
     private $url;
-    
+
     private $rate;
-    
-    public function getUrl() {
+
+    public function getUrl()
+    {
         return $this->url;
     }
 
-    public function getRate() {
+    public function getRate()
+    {
         return $this->rate;
     }
 
-    public function setUrl($url) {
+    public function setUrl($url)
+    {
         $this->url = $url;
     }
 
-    public function setRate($rate) {
+    public function setRate($rate)
+    {
         $this->rate = $rate;
     }
-    
-    public function getTitle() {
+
+    public function getTitle()
+    {
         return $this->title;
     }
 
-    public function getPerex() {
+    public function getPerex()
+    {
         return $this->perex;
     }
 
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
-    public function setPerex($perex) {
+    public function setPerex($perex)
+    {
         $this->perex = $perex;
     }
 
-    public function toArray() {
+    public function toArray()
+    {
         return array(
             'title' => $this->title,
             'perex' => $this->perex,
             'url' => $this->url,
-            'rate' => $this->rate
+            'rate' => $this->rate,
         );
     }
 }

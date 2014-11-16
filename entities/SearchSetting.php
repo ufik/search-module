@@ -9,30 +9,35 @@ use Doctrine\ORM\Mapping as orm;
  * @orm\Table(name="SearchSettings")
  * @author Tomáš Voslař <tomas.voslar at webcook.cz>
  */
-class SearchSetting extends \WebCMS\Entity\Entity {
+class SearchSetting extends \WebCMS\Entity\Entity
+{
     /**
      * @orm\Column
      */
     private $package;
-    
+
     /**
      * @orm\Column(type="boolean")
      */
     private $search;
-    
-    public function getPackage() {
+
+    public function getPackage()
+    {
         return $this->package;
     }
 
-    public function setPackage($package) {
+    public function setPackage($package)
+    {
         $this->package = $package;
     }
-    
-    public function getSearch() {
+
+    public function getSearch()
+    {
         return $this->search;
     }
 
-    public function setSearch($search) {
+    public function setSearch($search)
+    {
         $this->search = $search;
-    }        
+    }
 }
